@@ -15,11 +15,13 @@ import android.os.Bundle;
 import android.provider.ContactsContract;
 import android.util.Log;
 import android.view.View;
-import android.widget.ImageButton;
+import android.widget.Button;
+import android.widget.TextView;
 
 public class MainActivity extends AppCompatActivity {
 
-    private ImageButton imgContacts;
+    private Button imgContacts;
+    private TextView noOfContacts, displayContacts;
 
     private static final int RCREQUESTCODE = 1000;
 
@@ -28,13 +30,12 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        noOfContacts = findViewById(R.id.no_of_contacts);
+        displayContacts = findViewById(R.id.display_contacts);
+
         imgContacts = findViewById(R.id.imgContacts);
 
-        imgContacts.setOnClickListener(view -> {
-
-            askForReadContactsPermission();
-
-        });
+        imgContacts.setOnClickListener(view -> askForReadContactsPermission());
 
     }
 
@@ -59,7 +60,8 @@ public class MainActivity extends AppCompatActivity {
         Cursor cursor = contentResolver.query(uri, null, null, null, null);
 
         //to get no of contacts
-        Log.i("ContentProvider", "No of contacts is : " + cursor.getCount());
+//        Log.i("ContentProvider", "No of contacts is : " + cursor.getCount());
+        noOfContacts.setText("No of contacts is : " + cursor.getCount());
 
         //to get & display the name and number from the contacts
         if (cursor.getCount() > 0) {
@@ -69,7 +71,9 @@ public class MainActivity extends AppCompatActivity {
                 @SuppressLint("Range") String name = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME));
                 @SuppressLint("Range") String number = cursor.getString(cursor.getColumnIndex(ContactsContract.CommonDataKinds.Phone.NUMBER));
 
-                Log.i("ContentProvider", "Name is: " + name + " and number is: " + number);
+//                Log.i("ContentProvider", "Name is: " + name + " and number is: " + number);
+
+                displayContacts.append("Name: " + name + " \nNumber: " + number + "\n\n");
 
             }
 
